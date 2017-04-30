@@ -232,6 +232,7 @@ public class Initialisation {
         primaryStage.show();
         //primaryStage.getIcons().add(new Image("file:sprites/arjl-logo.png"));
 
+        primaryStage.setResizable(false);
 
         FormeManager.init();
     }
