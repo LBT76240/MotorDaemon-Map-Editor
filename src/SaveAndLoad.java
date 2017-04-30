@@ -31,8 +31,6 @@ public class SaveAndLoad {
             saveButton.setDisable(false);
 
             //TODO charger
-        }  else {
-            System.out.println("Fichier non valide");
         }
 
     }
@@ -67,8 +65,6 @@ public class SaveAndLoad {
 
 
 
-        }  else {
-            System.out.println("Fichier non valide");
         }
 
 
@@ -100,8 +96,6 @@ public class SaveAndLoad {
 
 
 
-        } else {
-            System.out.println("Fichier non valide");
         }
 
 

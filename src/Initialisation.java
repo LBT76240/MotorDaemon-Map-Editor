@@ -56,10 +56,24 @@ public class Initialisation {
 
 
 
-        MenuItem toolboxmenu = new MenuItem("Fonction 1");
+        MenuItem fondmenu = new MenuItem("Changer image de fond");
+        fondmenu.setMnemonicParsing(false);
+        editmenu.getItems().add(fondmenu);
+
+        MenuItem toolboxmenu = new MenuItem("Fonction 2");
         toolboxmenu.setMnemonicParsing(false);
         editmenu.getItems().add(toolboxmenu);
 
+
+        //Bouton changer image de fond
+        fondmenu.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+                ChangerImageFond changerImageFond = new ChangerImageFond();
+                changerImageFond.change(primaryStage,anchorPane);
+
+            }
+
+        });
 
         //Bouton Open
         openButton.setOnAction(event -> {
@@ -158,6 +172,7 @@ public class Initialisation {
         noexit.setLayoutX(120);
         noexit.setOnAction(event -> {
             anchorPane.getChildren().remove(exitPane);
+            FormeManager.setBugMod(false);
         });
         exitPane.getChildren().addAll(exittext,yesexit,noexit);
         /**
@@ -168,6 +183,7 @@ public class Initialisation {
             exitPane.setLayoutX(anchorPane.getWidth()/2-100);
             exitPane.setLayoutY((anchorPane.getHeight()-63)/2-50);
             if(!FormeManager.isBugMod()) {
+                FormeManager.setBugMod(true);
                 exitPane.setLayoutX(anchorPane.getWidth() / 2 - 100);
                 exitPane.setLayoutY((anchorPane.getHeight() - 63) / 2 - 50);
 
@@ -206,6 +222,8 @@ public class Initialisation {
 
         });
 
+
+
         Scene primaryscene = new Scene(anchorPane, 1000, 700);
 
         primaryStage.setTitle("MotorDaemon-Map-Editor");
@@ -213,5 +231,8 @@ public class Initialisation {
         primaryStage.sizeToScene();
         primaryStage.show();
         //primaryStage.getIcons().add(new Image("file:sprites/arjl-logo.png"));
+
+
+        FormeManager.init();
     }
 }
