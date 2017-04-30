@@ -1,5 +1,8 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -14,6 +17,91 @@ public class Initialisation {
         AnchorPane anchorPane=new AnchorPane();
         anchorPane.setPrefHeight(1000);
         anchorPane.setPrefWidth(1000);
+
+        //Menu
+        MenuBar menubar=new MenuBar();
+        menubar.setPrefHeight(29);
+        menubar.setPrefWidth(1000);
+        AnchorPane.setLeftAnchor(menubar,0.0);
+        AnchorPane.setRightAnchor(menubar,0.0);
+
+        Menu filemenu = new Menu("File");
+        filemenu.setMnemonicParsing(false);
+
+        menubar.getMenus().add(filemenu);
+
+        MenuItem openButton = new MenuItem("Open");
+        openButton.setMnemonicParsing(false);
+        filemenu.getItems().add(openButton);
+
+        MenuItem saveButton = new MenuItem("Save");
+        saveButton.setMnemonicParsing(false);
+        saveButton.setDisable(true);
+        filemenu.getItems().add(saveButton);
+
+        MenuItem saveAsButton = new MenuItem("Save As");
+        saveAsButton.setMnemonicParsing(false);
+        filemenu.getItems().add(saveAsButton);
+
+        MenuItem closeButton = new MenuItem("Close");
+        closeButton.setMnemonicParsing(false);
+        filemenu.getItems().add(closeButton);
+
+
+
+        Menu editmenu = new Menu("Edit");
+        editmenu.setMnemonicParsing(false);
+
+        menubar.getMenus().add(editmenu);
+
+
+
+        MenuItem toolboxmenu = new MenuItem("Fonction 1");
+        toolboxmenu.setMnemonicParsing(false);
+        editmenu.getItems().add(toolboxmenu);
+
+
+        //Bouton Open
+        openButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+
+                SaveAndLoad saveAndLoad = new SaveAndLoad();
+                saveAndLoad.Load(primaryStage,saveButton);
+
+
+
+            }
+        });
+
+        //Bouton SaveAs
+        saveAsButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+
+                SaveAndLoad saveAndLoad = new SaveAndLoad();
+                saveAndLoad.SaveAs(primaryStage,saveButton);
+
+
+
+            }
+        });
+
+        //Bouton SAve
+
+        saveButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+
+                SaveAndLoad saveAndLoad = new SaveAndLoad();
+                saveAndLoad.Save(primaryStage);
+
+
+
+            }
+        });
+
+
+
+
+        anchorPane.getChildren().add(menubar);
 
         //Fonction Validation Sauvegarder
         AnchorPane savePane = new AnchorPane();
@@ -79,7 +167,7 @@ public class Initialisation {
             event2.consume();
             exitPane.setLayoutX(anchorPane.getWidth()/2-100);
             exitPane.setLayoutY((anchorPane.getHeight()-63)/2-50);
-            if(!FormeManager.isBugging()) {
+            if(!FormeManager.isBugMod()) {
                 exitPane.setLayoutX(anchorPane.getWidth() / 2 - 100);
                 exitPane.setLayoutY((anchorPane.getHeight() - 63) / 2 - 50);
 
@@ -99,8 +187,24 @@ public class Initialisation {
 
 
         });
+        //Button Close
+        closeButton.setOnAction(event -> {
 
+            if(!FormeManager.isBugMod()) {
+                exitPane.setLayoutX(anchorPane.getWidth() / 2 - 100);
+                exitPane.setLayoutY((anchorPane.getHeight() - 63) / 2 - 50);
 
+                if (anchorPane.getChildren().contains(exitPane)) {
+                    anchorPane.getChildren().remove(exitPane);
+                }
+                if (anchorPane.getChildren().contains(savePane)) {
+
+                } else {
+                    anchorPane.getChildren().add(exitPane);
+                }
+            }
+
+        });
 
         Scene primaryscene = new Scene(anchorPane, 1000, 700);
 
