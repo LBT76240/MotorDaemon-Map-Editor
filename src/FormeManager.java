@@ -263,7 +263,7 @@ public class FormeManager {
         try {
             rot = Integer.parseInt(rotString);
         } catch (NumberFormatException e) {
-            afficheError("Longeur invalide" );
+            afficheError("Rotation invalide" );
             return;
         }
 
@@ -275,6 +275,9 @@ public class FormeManager {
         newRectangle.setHeight(longeur);
         newRectangle.setStrokeWidth(4);
         newRectangle.getTransforms().add(new Rotate(rot,posX,posY));
+
+
+        newRectangle.setAccessibleText(rotString);
         newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
         newRectangle.setFill(null);
         planPane.getChildren().add(newRectangle);
@@ -299,7 +302,8 @@ public class FormeManager {
                     if(y>800) {
                         y=800;
                     }
-
+                    newRectangle.getTransforms().clear();
+                    newRectangle.getTransforms().add(new Rotate(Integer.parseInt(newRectangle.getAccessibleText()),x,y));
                     newRectangle.setX(x);
                     newRectangle.setY(y);
 

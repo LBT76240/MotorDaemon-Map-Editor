@@ -1,8 +1,6 @@
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -52,12 +50,12 @@ public class Initialisation {
         openButton.setMnemonicParsing(false);
         filemenu.getItems().add(openButton);
 
-        MenuItem saveButton = new MenuItem("Save");
+        MenuItem saveButton = new MenuItem("save");
         saveButton.setMnemonicParsing(false);
         saveButton.setDisable(true);
         filemenu.getItems().add(saveButton);
 
-        MenuItem saveAsButton = new MenuItem("Save As");
+        MenuItem saveAsButton = new MenuItem("save As");
         saveAsButton.setMnemonicParsing(false);
         filemenu.getItems().add(saveAsButton);
 
@@ -98,19 +96,19 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.Load(primaryStage,saveButton);
+                saveAndLoad.load(primaryStage,saveButton);
 
 
 
             }
         });
 
-        //Bouton SaveAs
+        //Bouton saveAs
         saveAsButton.setOnAction(event -> {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.SaveAs(primaryStage,saveButton);
+                saveAndLoad.saveAs(primaryStage,saveButton);
 
 
 
@@ -123,7 +121,7 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.Save(primaryStage);
+                saveAndLoad.save(primaryStage);
 
 
 
@@ -141,7 +139,7 @@ public class Initialisation {
         savePane.setPrefWidth(200);
         savePane.setStyle("-fx-border-color: black;-fx-background-color: white ;");
         Text savetext = new Text();
-        savetext.setText("Save ?");
+        savetext.setText("save ?");
 
         savetext.setX(80);
         savetext.setY(20);
@@ -151,7 +149,8 @@ public class Initialisation {
         yessave.setLayoutX(40);
         yessave.setOnAction(event -> {
 
-            //TODO SAVE
+            SaveAndLoad saveAndLoad = new SaveAndLoad();
+            saveAndLoad.save(primaryStage);
 
             primaryStage.close();
         });
