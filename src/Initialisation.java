@@ -1,10 +1,9 @@
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -19,6 +18,23 @@ public class Initialisation {
         AnchorPane anchorPane=new AnchorPane();
         anchorPane.setPrefHeight(1000);
         anchorPane.setPrefWidth(1000);
+
+        //AnchorPane Plan
+        AnchorPane planPane = new AnchorPane();
+        planPane.setLayoutY(29);
+        planPane.setLayoutX(210);
+        planPane.setPrefHeight(800);
+        planPane.setPrefWidth(800);
+
+        Rectangle Border = new Rectangle();
+        Border.setX(0);
+        Border.setY(0);
+        Border.setHeight(800);
+        Border.setWidth(800);
+        Border.setStroke(javafx.scene.paint.Color.BLACK);
+        Border.setFill(null);
+        planPane.getChildren().add(Border);
+        anchorPane.getChildren().add(planPane);
 
         //Menu
         MenuBar menubar=new MenuBar();
@@ -71,7 +87,7 @@ public class Initialisation {
         fondmenu.setOnAction(event -> {
             if(!FormeManager.isBugMod()) {
                 ChangerImageFond changerImageFond = new ChangerImageFond();
-                changerImageFond.change(primaryStage,anchorPane);
+                changerImageFond.change(primaryStage,planPane);
 
             }
 
@@ -226,7 +242,92 @@ public class Initialisation {
 
 
 
-        Scene primaryscene = new Scene(anchorPane, 1000, 700);
+        Button cercleButton = new Button ("Ajout Cercle");
+        cercleButton.setLayoutX(20);
+        cercleButton.setLayoutY(200);
+        anchorPane.getChildren().add(cercleButton);
+
+        Button rectangleButton = new Button ("Ajout Rectangle");
+        rectangleButton.setLayoutX(20);
+        rectangleButton.setLayoutY(230);
+        anchorPane.getChildren().add(rectangleButton);
+
+        Text posXtext = new Text("Position X (mm)");
+        posXtext.setLayoutX(20);
+        posXtext.setLayoutY(280);
+        anchorPane.getChildren().add(posXtext);
+
+        TextField posXfield = new TextField ("200");
+        posXfield.setLayoutX(20);
+        posXfield.setLayoutY(290);
+        anchorPane.getChildren().add(posXfield);
+
+        Text posYtext = new Text("Position Y (mm)");
+        posYtext.setLayoutX(20);
+        posYtext.setLayoutY(340);
+        anchorPane.getChildren().add(posYtext);
+
+        TextField posYfield = new TextField ("200");
+        posYfield.setLayoutX(20);
+        posYfield.setLayoutY(350);
+        anchorPane.getChildren().add(posYfield);
+
+        Text rottext = new Text("Rotation (°C)");
+        rottext.setLayoutX(20);
+        rottext.setLayoutY(400);
+        anchorPane.getChildren().add(rottext);
+
+        TextField rotfield = new TextField ("0");
+        rotfield.setLayoutX(20);
+        rotfield.setLayoutY(410);
+        anchorPane.getChildren().add(rotfield);
+
+        Text rayontext = new Text("Rayon (mm)");
+        rayontext.setLayoutX(20);
+        rayontext.setLayoutY(460);
+        anchorPane.getChildren().add(rayontext);
+
+        TextField rayonfield = new TextField ("10");
+        rayonfield.setLayoutX(20);
+        rayonfield.setLayoutY(470);
+        anchorPane.getChildren().add(rayonfield);
+
+        Text largeurtext = new Text("Largeur (mm)");
+        largeurtext.setLayoutX(20);
+        largeurtext.setLayoutY(520);
+        anchorPane.getChildren().add(largeurtext);
+
+        TextField largeurfield = new TextField ("100");
+        largeurfield.setLayoutX(20);
+        largeurfield.setLayoutY(530);
+        anchorPane.getChildren().add(largeurfield);
+
+        Text longeurtext = new Text("Longeur (mm)");
+        longeurtext.setLayoutX(20);
+        longeurtext.setLayoutY(580);
+        anchorPane.getChildren().add(longeurtext);
+
+        TextField longeurfield = new TextField ("100");
+        longeurfield.setLayoutX(20);
+        longeurfield.setLayoutY(590);
+        anchorPane.getChildren().add(longeurfield);
+
+
+        cercleButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+                FormeManager.ajoutCercle(posXfield, posYfield, rayonfield, planPane);
+            }
+
+        });
+        rectangleButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+                FormeManager.ajoutRectangle(posXfield, posYfield, rotfield,largeurfield,longeurfield, planPane);
+            }
+
+        });
+
+
+        Scene primaryscene = new Scene(anchorPane, 1000, 820);
 
         primaryStage.setTitle("MotorDaemon-Map-Editor");
         primaryStage.setScene(primaryscene);

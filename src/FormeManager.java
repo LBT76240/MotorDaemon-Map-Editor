@@ -1,16 +1,32 @@
+import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+
 import java.awt.*;
+import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by trail on 2017-04-30.
  */
 public class FormeManager {
+
+    public static ArrayList<Circle> arrayListOfCercle = new ArrayList();
+    public static ArrayList<Rectangle> arrayListOfRectangle = new ArrayList();
+
     private static boolean bugMod = false;
 
     private static boolean loadMod = false;
@@ -105,7 +121,218 @@ public class FormeManager {
 
     }
 
+
+    public static void ajoutCercle(TextField posXfield, TextField posYfield, TextField rayonfield, AnchorPane planPane) {
+
+        String posXString = posXfield.getText();
+        int posX=0;
+
+        try {
+            posX = Integer.parseInt(posXString);
+        } catch (NumberFormatException e) {
+            afficheError("Position X invalide" );
+            return;
+        }
+
+        String posYString = posYfield.getText();
+        int posY=0;
+
+        try {
+            posY = Integer.parseInt(posYString);
+        } catch (NumberFormatException e) {
+            afficheError("Position Y invalide" );
+            return;
+        }
+
+        String rayonString = rayonfield.getText();
+        int rayon=0;
+
+        try {
+            rayon = Integer.parseInt(rayonString);
+        } catch (NumberFormatException e) {
+            afficheError("Rayon invalide" );
+            return;
+        }
+
+        Circle newCircle = new Circle();
+        newCircle.setCenterX(posX);
+        newCircle.setCenterY(posY);
+        newCircle.setRadius(rayon);
+        newCircle.setStroke(javafx.scene.paint.Color.BLACK);
+        newCircle.setStrokeWidth(4);
+        newCircle.setFill(null);
+        planPane.getChildren().add(newCircle);
+        arrayListOfCercle.add(newCircle);
+
+        newCircle.setOnMouseDragged(event -> {
+            if(!bugMod) {
+
+                if(event.isPrimaryButtonDown()) {
+                    double x = event.getSceneX() - 210;
+                    double y = event.getSceneY() - 29;
+
+                    if(x<0) {
+                        x=0;
+                    }
+                    if(y<0) {
+                        y=0;
+                    }
+                    if(x>800) {
+                        x=800;
+                    }
+                    if(y>800) {
+                        y=800;
+                    }
+                    newCircle.setCenterX(x);
+                    newCircle.setCenterY(y);
+
+                }
+            }
+        });
+
+        ContextMenu contextMenu = new ContextMenu();
+
+
+        MenuItem itemDelete = new MenuItem("Delete");
+        itemDelete.setOnAction(event -> {
+            arrayListOfCercle.remove(newCircle);
+            planPane.getChildren().remove(newCircle);
+
+
+        });
+
+        contextMenu.getItems().add(itemDelete);
+        newCircle.setOnContextMenuRequested(event -> {
+            if(!bugMod) {
+                contextMenu.show(newCircle, Side.TOP, 0, 0);
+
+            }
+
+        });
+
+    }
+
+    public static void ajoutRectangle(TextField posXfield, TextField posYfield, TextField rotfield, TextField largeurfield, TextField longeurfield, AnchorPane planPane) {
+
+
+        Rectangle newRectangle = new Rectangle();
+
+        String posXString = posXfield.getText();
+        int posX=0;
+
+        try {
+            posX = Integer.parseInt(posXString);
+        } catch (NumberFormatException e) {
+            afficheError("Position X invalide" );
+            return;
+        }
+
+        String posYString = posYfield.getText();
+        int posY=0;
+
+        try {
+            posY = Integer.parseInt(posYString);
+        } catch (NumberFormatException e) {
+            afficheError("Position Y invalide" );
+            return;
+        }
+
+        String largeurString = largeurfield.getText();
+        int largeur=0;
+
+        try {
+            largeur = Integer.parseInt(largeurString);
+        } catch (NumberFormatException e) {
+            afficheError("Largeur invalide" );
+            return;
+        }
+
+        String longeurString = longeurfield.getText();
+        int longeur=0;
+
+        try {
+            longeur = Integer.parseInt(longeurString);
+        } catch (NumberFormatException e) {
+            afficheError("Longeur invalide" );
+            return;
+        }
+
+        String rotString = rotfield.getText();
+        int rot=0;
+
+        try {
+            rot = Integer.parseInt(rotString);
+        } catch (NumberFormatException e) {
+            afficheError("Longeur invalide" );
+            return;
+        }
+
+
+
+        newRectangle.setX(posX);
+        newRectangle.setY(posY);
+        newRectangle.setWidth(largeur);
+        newRectangle.setHeight(longeur);
+        newRectangle.setStrokeWidth(4);
+        newRectangle.getTransforms().add(new Rotate(rot,posX,posY));
+        newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
+        newRectangle.setFill(null);
+        planPane.getChildren().add(newRectangle);
+        arrayListOfRectangle.add(newRectangle);
+
+        newRectangle.setOnMouseDragged(event -> {
+            if(!bugMod) {
+
+                if(event.isPrimaryButtonDown()) {
+                    double x = event.getSceneX() - 210;
+                    double y = event.getSceneY() - 29;
+
+                    if(x<0) {
+                        x=0;
+                    }
+                    if(y<0) {
+                        y=0;
+                    }
+                    if(x>800) {
+                        x=800;
+                    }
+                    if(y>800) {
+                        y=800;
+                    }
+
+                    newRectangle.setX(x);
+                    newRectangle.setY(y);
+
+                }
+            }
+        });
+
+        ContextMenu contextMenu = new ContextMenu();
+
+
+        MenuItem itemDelete = new MenuItem("Delete");
+        itemDelete.setOnAction(event -> {
+            arrayListOfRectangle.remove(newRectangle);
+            planPane.getChildren().remove(newRectangle);
+
+
+        });
+
+        contextMenu.getItems().add(itemDelete);
+        newRectangle.setOnContextMenuRequested(event -> {
+            if(!bugMod) {
+                contextMenu.show(newRectangle, Side.TOP, 0, 0);
+
+            }
+
+        });
+    }
+
+
     public static void init () {
         initErrorStage();
     }
+
+
+
 }

@@ -42,10 +42,14 @@ public class ChangerImageFond {
             Image chat = new Image(path);
 
 
+            System.out.println(chat.getHeight());
+            BackgroundSize mySize = new BackgroundSize(800,800,false,false,false,false);
 
             BackgroundImage myBI= new BackgroundImage(chat,
                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                    BackgroundSize.DEFAULT);
+                    mySize);
+
+
 
 
 
