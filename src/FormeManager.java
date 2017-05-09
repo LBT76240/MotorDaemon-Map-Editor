@@ -273,11 +273,12 @@ public class FormeManager {
         newRectangle.setY(posY);
         newRectangle.setWidth(largeur);
         newRectangle.setHeight(longeur);
-        newRectangle.setStrokeWidth(4);
+
         newRectangle.getTransforms().add(new Rotate(rot,posX,posY));
 
 
         newRectangle.setAccessibleText(rotString);
+        newRectangle.setStrokeWidth(4);
         newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
         newRectangle.setFill(null);
         planPane.getChildren().add(newRectangle);

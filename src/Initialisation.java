@@ -96,7 +96,7 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.load(primaryStage,saveButton);
+                saveAndLoad.load(primaryStage,saveButton,planPane);
 
 
 
