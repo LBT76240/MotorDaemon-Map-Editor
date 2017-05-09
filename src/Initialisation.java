@@ -13,6 +13,8 @@ import javafx.stage.Stage;
  */
 public class Initialisation {
     public void init (Stage primaryStage) {
+        //Test
+
         //AnchorPane principale
         AnchorPane anchorPane=new AnchorPane();
         anchorPane.setPrefHeight(1000);
