@@ -3,10 +3,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.*;
+import javafx.scene.layout.*;
 import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -15,7 +13,6 @@ import javafx.stage.Stage;
 
 
 import java.awt.*;
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -23,6 +20,34 @@ import java.util.ArrayList;
  * Created by trail on 2017-04-30.
  */
 public class FormeManager {
+    private static String path = null;
+
+    public static String getPath() {
+        return path;
+    }
+
+    public static void setPath(String path) {
+        FormeManager.path = path;
+    }
+
+    private static int height = 800;
+    private static int width = 800;
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setHeight(int height) {
+        FormeManager.height = height;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static void setWidth(int width) {
+        FormeManager.width = width;
+    }
 
     public static ArrayList<Circle> arrayListOfCercle = new ArrayList();
     public static ArrayList<Rectangle> arrayListOfRectangle = new ArrayList();
@@ -66,6 +91,8 @@ public class FormeManager {
         return file;
 
     }
+
+
 
     private static void initErrorStage() {
         errorPane.setPrefHeight(50);
@@ -121,8 +148,66 @@ public class FormeManager {
 
     }
 
+    public static Circle newCircle(int posX,int posY,int rayon, AnchorPane planPane,Rectangle border) {
 
-    public static void ajoutCercle(TextField posXfield, TextField posYfield, TextField rayonfield, AnchorPane planPane) {
+        Circle newCircle = new Circle();
+        newCircle.setCenterX(posX);
+        newCircle.setCenterY(posY);
+        newCircle.setRadius(rayon);
+        newCircle.setStroke(javafx.scene.paint.Color.BLACK);
+        newCircle.setStrokeWidth(4);
+        newCircle.setFill(null);
+
+
+        newCircle.setOnMouseDragged(event -> {
+            if(!bugMod) {
+
+                if(event.isPrimaryButtonDown()) {
+                    double x = event.getSceneX() - 210;
+                    double y = event.getSceneY() - 29;
+
+                    if(x<0) {
+                        x=0;
+                    }
+                    if(y<0) {
+                        y=0;
+                    }
+                    if(x>border.getWidth()) {
+                        x=border.getWidth();
+                    }
+                    if(y>border.getHeight()) {
+                        y=border.getHeight();
+                    }
+                    newCircle.setCenterX(x);
+                    newCircle.setCenterY(y);
+
+                }
+            }
+        });
+
+        ContextMenu contextMenu = new ContextMenu();
+
+
+        MenuItem itemDelete = new MenuItem("Delete");
+        itemDelete.setOnAction(event -> {
+            arrayListOfCercle.remove(newCircle);
+            planPane.getChildren().remove(newCircle);
+
+
+        });
+
+        contextMenu.getItems().add(itemDelete);
+        newCircle.setOnContextMenuRequested(event -> {
+            if(!bugMod) {
+                contextMenu.show(newCircle, Side.TOP, 0, 0);
+
+            }
+
+        });
+
+        return newCircle;
+    }
+    public static void ajoutCercle(TextField posXfield, TextField posYfield, TextField rayonfield, AnchorPane planPane,Rectangle border) {
 
         String posXString = posXfield.getText();
         int posX=0;
@@ -154,17 +239,30 @@ public class FormeManager {
             return;
         }
 
-        Circle newCircle = new Circle();
-        newCircle.setCenterX(posX);
-        newCircle.setCenterY(posY);
-        newCircle.setRadius(rayon);
-        newCircle.setStroke(javafx.scene.paint.Color.BLACK);
-        newCircle.setStrokeWidth(4);
-        newCircle.setFill(null);
+        Circle newCircle = newCircle(posX,posY,rayon, planPane,border);
         planPane.getChildren().add(newCircle);
         arrayListOfCercle.add(newCircle);
 
-        newCircle.setOnMouseDragged(event -> {
+    }
+
+
+    public static Rectangle newRectangle(int posX, int posY,int largeur,int longeur,int rot,String rotString,AnchorPane planPane,Rectangle border) {
+        Rectangle newRectangle = new Rectangle();
+        newRectangle.setX(posX);
+        newRectangle.setY(posY);
+        newRectangle.setWidth(largeur);
+        newRectangle.setHeight(longeur);
+
+        newRectangle.getTransforms().add(new Rotate(rot,posX,posY));
+
+
+        newRectangle.setAccessibleText(rotString);
+        newRectangle.setStrokeWidth(4);
+        newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
+        newRectangle.setFill(null);
+
+
+        newRectangle.setOnMouseDragged(event -> {
             if(!bugMod) {
 
                 if(event.isPrimaryButtonDown()) {
@@ -177,14 +275,16 @@ public class FormeManager {
                     if(y<0) {
                         y=0;
                     }
-                    if(x>800) {
-                        x=800;
+                    if(x>border.getWidth()) {
+                        x=border.getWidth();
                     }
-                    if(y>800) {
-                        y=800;
+                    if(y>border.getHeight()) {
+                        y=border.getHeight();
                     }
-                    newCircle.setCenterX(x);
-                    newCircle.setCenterY(y);
+                    newRectangle.getTransforms().clear();
+                    newRectangle.getTransforms().add(new Rotate(Integer.parseInt(newRectangle.getAccessibleText()),x,y));
+                    newRectangle.setX(x);
+                    newRectangle.setY(y);
 
                 }
             }
@@ -195,27 +295,27 @@ public class FormeManager {
 
         MenuItem itemDelete = new MenuItem("Delete");
         itemDelete.setOnAction(event -> {
-            arrayListOfCercle.remove(newCircle);
-            planPane.getChildren().remove(newCircle);
+            arrayListOfRectangle.remove(newRectangle);
+            planPane.getChildren().remove(newRectangle);
 
 
         });
 
         contextMenu.getItems().add(itemDelete);
-        newCircle.setOnContextMenuRequested(event -> {
+        newRectangle.setOnContextMenuRequested(event -> {
             if(!bugMod) {
-                contextMenu.show(newCircle, Side.TOP, 0, 0);
+                contextMenu.show(newRectangle, Side.TOP, 0, 0);
 
             }
 
         });
+        return newRectangle;
 
     }
+    public static void ajoutRectangle(TextField posXfield, TextField posYfield, TextField rotfield, TextField largeurfield, TextField longeurfield, AnchorPane planPane,Rectangle border) {
 
-    public static void ajoutRectangle(TextField posXfield, TextField posYfield, TextField rotfield, TextField largeurfield, TextField longeurfield, AnchorPane planPane) {
 
 
-        Rectangle newRectangle = new Rectangle();
 
         String posXString = posXfield.getText();
         int posX=0;
@@ -267,70 +367,10 @@ public class FormeManager {
             return;
         }
 
-
-
-        newRectangle.setX(posX);
-        newRectangle.setY(posY);
-        newRectangle.setWidth(largeur);
-        newRectangle.setHeight(longeur);
-
-        newRectangle.getTransforms().add(new Rotate(rot,posX,posY));
-
-
-        newRectangle.setAccessibleText(rotString);
-        newRectangle.setStrokeWidth(4);
-        newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
-        newRectangle.setFill(null);
+        Rectangle newRectangle = newRectangle(posX,posY,largeur,longeur,rot,rotString,planPane,border);
         planPane.getChildren().add(newRectangle);
         arrayListOfRectangle.add(newRectangle);
 
-        newRectangle.setOnMouseDragged(event -> {
-            if(!bugMod) {
-
-                if(event.isPrimaryButtonDown()) {
-                    double x = event.getSceneX() - 210;
-                    double y = event.getSceneY() - 29;
-
-                    if(x<0) {
-                        x=0;
-                    }
-                    if(y<0) {
-                        y=0;
-                    }
-                    if(x>800) {
-                        x=800;
-                    }
-                    if(y>800) {
-                        y=800;
-                    }
-                    newRectangle.getTransforms().clear();
-                    newRectangle.getTransforms().add(new Rotate(Integer.parseInt(newRectangle.getAccessibleText()),x,y));
-                    newRectangle.setX(x);
-                    newRectangle.setY(y);
-
-                }
-            }
-        });
-
-        ContextMenu contextMenu = new ContextMenu();
-
-
-        MenuItem itemDelete = new MenuItem("Delete");
-        itemDelete.setOnAction(event -> {
-            arrayListOfRectangle.remove(newRectangle);
-            planPane.getChildren().remove(newRectangle);
-
-
-        });
-
-        contextMenu.getItems().add(itemDelete);
-        newRectangle.setOnContextMenuRequested(event -> {
-            if(!bugMod) {
-                contextMenu.show(newRectangle, Side.TOP, 0, 0);
-
-            }
-
-        });
     }
 
 
@@ -338,6 +378,81 @@ public class FormeManager {
         initErrorStage();
     }
 
+
+    public static void setSize(int longeur, int largeur,AnchorPane planPane,Rectangle border) {
+        System.out.println("largeur : " + largeur);
+        System.out.println("longeur : " + longeur);
+        FormeManager.setWidth(largeur);
+        FormeManager.setHeight(longeur);
+
+
+        if(FormeManager.height > largeur) {
+            largeur = (800 * largeur) / longeur;
+            longeur = 800;
+
+            planPane.setPrefHeight(longeur);
+
+            planPane.setPrefWidth(largeur);
+
+            border.setHeight(longeur);
+            border.setWidth(largeur);
+
+
+            if(FormeManager.getPath()!=null) {
+
+                Image chat = new Image(FormeManager.getPath());
+
+
+
+                BackgroundSize mySize = new BackgroundSize(border.getWidth(),border.getHeight(),false,false,false,false);
+
+
+                BackgroundImage myBI= new BackgroundImage(chat,
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                        mySize);
+
+
+
+
+
+                planPane.setBackground(new Background(myBI));
+            }
+        } else  {
+
+
+
+            longeur = (800 * longeur) / largeur;
+            largeur = 800;
+
+            planPane.setPrefHeight(longeur);
+
+            planPane.setPrefWidth(largeur);
+
+            border.setHeight(longeur);
+            border.setWidth(largeur);
+
+
+            if(FormeManager.getPath()!=null) {
+
+                Image chat = new Image(FormeManager.getPath());
+
+
+
+                BackgroundSize mySize = new BackgroundSize(border.getWidth(),border.getHeight(),false,false,false,false);
+
+
+                BackgroundImage myBI= new BackgroundImage(chat,
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                        mySize);
+
+
+
+
+
+                planPane.setBackground(new Background(myBI));
+            }
+        }
+    }
 
 
 }

@@ -1,11 +1,7 @@
-import javafx.geometry.Side;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
@@ -16,7 +12,7 @@ import java.util.ArrayList;
  */
 public class SaveAndLoad {
 
-    public void load(Stage primaryStage, MenuItem saveButton, AnchorPane planPane) {
+    public void load(Stage primaryStage, MenuItem saveButton, AnchorPane planPane,Rectangle border) {
         //On passe le LoadMode en true
         FormeManager.setLoadMod(true);
 
@@ -67,208 +63,184 @@ public class SaveAndLoad {
 
                 String sCurrentLine;
 
-                Circle newCircle = null;
-                Rectangle newRectangle = null;
 
+                Boolean mapSizeRequire = false;
+                int sizeX = -1;
+                int sizeY = -1;
+                Boolean newCircleRequire = false;
+                Boolean newRectangleRequire = false;
+                int posX = -1;
+                int posY = -1;
+                int rayon = -1;
+                String rotString = null;
+                int rot = -1;
+                int height = -1;
+                int width = -1;
+                double facteur = 1.;
                 while ((sCurrentLine = bufferedReader.readLine()) != null) {
-                    if(sCurrentLine.contains("{")) {
-                        newCircle = null;
-                        newRectangle = null;
-                    } else if(newCircle == null && newRectangle == null) {
+                    if(sCurrentLine.contains("{") && !sCurrentLine.contains("map") ) {
+                        mapSizeRequire = false;
+                        sizeX = -1;
+                        sizeY = -1;
+                        newCircleRequire = false;
+                        newRectangleRequire = false;
+                        posX = -1;
+                        posY = -1;
+                        rayon = -1;
+                        rot = -1;
+                        rotString = null;
+                        height = -1;
+                        width = -1;
+                    } else if(sCurrentLine.contains("}")) {
+                        if(mapSizeRequire) {
+                            if(sizeX!=-1 && sizeY !=-1) {
+                                System.out.println("Map : X :"+sizeX+" Y : " + sizeY);
+                                int max = sizeX;
+                                if(sizeY>sizeX) {
+                                    max = sizeY;
+                                }
+                                facteur = (facteur*800.)/max;
+                                System.out.println("Facteur : " + facteur);
+                                FormeManager.setSize(sizeX,sizeY,planPane,border);
+                            } else {
+                                FormeManager.afficheError("Ton Json est de la merde, va niquer ta maire, celle qui t'as porté pendant 12 mois !");
+                            }
+
+                        } else if (newCircleRequire){
+                            if(posX!=-1 && posY!=-1 && rayon!=-1) {
+                                Circle newCircle = FormeManager.newCircle(posX, posY, rayon, planPane, border);
+                                newArrayCircle.add(newCircle);
+                            } else {
+                                FormeManager.afficheError("Ton Json est de la merde, va niquer ta maire, celle qui t'as porté pendant 12 mois !");
+
+                            }
+
+                        } else if (newRectangleRequire){
+                            if(posX!=-1&& posY!=-1&&width!=-1&&height!=-1&&rot!=-1&&rotString!=null) {
+                                Rectangle newRectangle = FormeManager.newRectangle(posX,posY,width,height,rot,rotString,planPane,border);
+                                newArrayRectangle.add(newRectangle);
+                            }else {
+                                FormeManager.afficheError("Ton Json est de la merde, va niquer ta maire, celle qui t'as porté pendant 12 mois !");
+
+                            }
+
+                        }
+                        mapSizeRequire = false;
+                        sizeX = -1;
+                        sizeY = -1;
+                        newCircleRequire = false;
+                        newRectangleRequire = false;
+                        posX = -1;
+                        posY = -1;
+                        rayon = -1;
+                        rot = -1;
+                        rotString = null;
+                        height = -1;
+                        width = -1;
+                    } else if(newCircleRequire == false && newRectangleRequire == false && mapSizeRequire == false) {
                         if (sCurrentLine.contains("circle")) {
-                            newCircle = new Circle();
+                            newCircleRequire = true;
                         }
                         if (sCurrentLine.contains("rectangle")) {
-                            newRectangle = new Rectangle();
+                            newRectangleRequire = true;
                         }
-                    } else if (newCircle != null){
+                        if (sCurrentLine.contains("map")) {
+                            mapSizeRequire = true;
+                        }
+                    } else if (newCircleRequire){
                         if (sCurrentLine.contains("\"x\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
                             lapin = lapin[n-1].split(",");
                             String xS = lapin[0];
                             int x = Integer.parseInt(xS);
-                            newCircle.setCenterX(x);
+                            posX=(int) (x*facteur);
                         } else if (sCurrentLine.contains("\"y\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
                             lapin = lapin[n-1].split(",");
                             String yS = lapin[0];
                             int y = Integer.parseInt(yS);
-                            newCircle.setCenterY(y);
+                            posY=(int) (y*facteur);
                         } else if (sCurrentLine.contains("\"rayon\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
                             lapin = lapin[n-1].split(",");
                             String rayonS = lapin[0];
-                            int rayon = Integer.parseInt(rayonS);
-                            newCircle.setRadius(rayon);
+                            int rayon2 = Integer.parseInt(rayonS);
+                            rayon = (int) (rayon2*facteur);
 
 
-                            newCircle.setStroke(javafx.scene.paint.Color.BLACK);
-                            newCircle.setStrokeWidth(4);
-                            newCircle.setFill(null);
-                            Circle finalNewCircle = newCircle;
-                            newCircle.setOnMouseDragged(event -> {
-                                if(!FormeManager.isBugMod()) {
 
-                                    if(event.isPrimaryButtonDown()) {
-                                        double x = event.getSceneX() - 210;
-                                        double y = event.getSceneY() - 29;
-
-                                        if(x<0) {
-                                            x=0;
-                                        }
-                                        if(y<0) {
-                                            y=0;
-                                        }
-                                        if(x>800) {
-                                            x=800;
-                                        }
-                                        if(y>800) {
-                                            y=800;
-                                        }
-                                        finalNewCircle.setCenterX(x);
-                                        finalNewCircle.setCenterY(y);
-
-                                    }
-                                }
-                            });
-                            ContextMenu contextMenu = new ContextMenu();
-
-
-                            MenuItem itemDelete = new MenuItem("Delete");
-                            itemDelete.setOnAction(event -> {
-                                FormeManager.arrayListOfCercle.remove(finalNewCircle);
-                                planPane.getChildren().remove(finalNewCircle);
-
-
-                            });
-
-                            contextMenu.getItems().add(itemDelete);
-                            newCircle.setOnContextMenuRequested(event -> {
-                                if(!FormeManager.isBugMod()) {
-                                    contextMenu.show(finalNewCircle, Side.TOP, 0, 0);
-
-                                }
-
-                            });
-
-                            newArrayCircle.add(finalNewCircle);
 
                         }
 
 
-                    } else if (newRectangle != null){
+                    } else if (newRectangleRequire) {
                         if (sCurrentLine.contains("\"x\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
-                            lapin = lapin[n-1].split(",");
+                            lapin = lapin[n - 1].split(",");
                             String xS = lapin[0];
                             int x = Integer.parseInt(xS);
-                            newRectangle.setX(x);
+                            posX = (int) (x*facteur);
                         } else if (sCurrentLine.contains("\"y\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
-                            lapin = lapin[n-1].split(",");
+                            lapin = lapin[n - 1].split(",");
                             String yS = lapin[0];
                             int y = Integer.parseInt(yS);
-                            newRectangle.setY(y);
+                            posY = (int) (y*facteur);
                         } else if (sCurrentLine.contains("\"angle\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
-                            lapin = lapin[n-1].split(",");
+                            lapin = lapin[n - 1].split(",");
                             String rayonS = lapin[0];
                             double rayonD = Double.parseDouble(rayonS);
 
                             rayonD = (rayonD * 360) / (2 * Math.PI);
 
-                            int rot = (int) rayonD;
+                            int rot2 = (int) rayonD;
+                            rot = (int) (rot2*facteur);
+                            rotString = String.valueOf(rot);
 
 
-                            newRectangle.getTransforms().add(new Rotate(rot,newRectangle.getX(),newRectangle.getY()));
-
-                            String rotString = String.valueOf(rot);
-
-                            newRectangle.setAccessibleText(rotString);
-
-
-
-                        } else if (sCurrentLine.contains("\"height\"")){
+                        } else if (sCurrentLine.contains("\"height\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
-                            lapin = lapin[n-1].split(",");
+                            lapin = lapin[n - 1].split(",");
                             String heightS = lapin[0];
-                            int height = Integer.parseInt(heightS);
-                            newRectangle.setHeight(height);
+                            int height2 = Integer.parseInt(heightS);
+                            height = (int) (height2*facteur);
 
-                        } else if (sCurrentLine.contains("\"width\"")){
+                        } else if (sCurrentLine.contains("\"width\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
-                            lapin = lapin[n-1].split(",");
+                            lapin = lapin[n - 1].split(",");
                             String widthS = lapin[0];
-                            int width = Integer.parseInt(widthS);
-                            newRectangle.setWidth(width);
-
-                            newRectangle.setStrokeWidth(4);
-                            newRectangle.setStroke(javafx.scene.paint.Color.BLACK);
-                            newRectangle.setFill(null);
+                            int width2 = Integer.parseInt(widthS);
+                            width = (int) (width2*facteur);
 
 
-
-                            Rectangle finalNewRectangle = newRectangle;
-                            newRectangle.setOnMouseDragged(event -> {
-                                if(!FormeManager.isBugMod()) {
-
-                                    if(event.isPrimaryButtonDown()) {
-                                        double x = event.getSceneX() - 210;
-                                        double y = event.getSceneY() - 29;
-
-                                        if(x<0) {
-                                            x=0;
-                                        }
-                                        if(y<0) {
-                                            y=0;
-                                        }
-                                        if(x>800) {
-                                            x=800;
-                                        }
-                                        if(y>800) {
-                                            y=800;
-                                        }
-                                        finalNewRectangle.getTransforms().clear();
-                                        finalNewRectangle.getTransforms().add(new Rotate(Integer.parseInt(finalNewRectangle.getAccessibleText()),x,y));
-                                        finalNewRectangle.setX(x);
-                                        finalNewRectangle.setY(y);
-
-                                    }
-                                }
-                            });
-                            ContextMenu contextMenu = new ContextMenu();
-
-
-                            MenuItem itemDelete = new MenuItem("Delete");
-                            itemDelete.setOnAction(event -> {
-                                FormeManager.arrayListOfRectangle.remove(finalNewRectangle);
-                                planPane.getChildren().remove(finalNewRectangle);
-
-
-                            });
-
-                            contextMenu.getItems().add(itemDelete);
-                            newRectangle.setOnContextMenuRequested(event -> {
-                                if(!FormeManager.isBugMod()) {
-                                    contextMenu.show(finalNewRectangle, Side.TOP, 0, 0);
-
-                                }
-
-                            });
-
-                            newArrayRectangle.add(finalNewRectangle);
                         }
 
 
-
+                    } else if (mapSizeRequire){
+                        if (sCurrentLine.contains("\"x\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String xS = lapin[0];
+                            int x = Integer.parseInt(xS);
+                            sizeX = x;
+                        } else if (sCurrentLine.contains("\"y\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String yS = lapin[0];
+                            int y = Integer.parseInt(yS);
+                            sizeY = y;
+                        }
                     } else {
                         FormeManager.afficheError("J'ai de la merde, my bad");
                         return;
@@ -329,7 +301,7 @@ public class SaveAndLoad {
     }
 
 
-    private void saveP(File file) {
+    private void saveP(File file,Rectangle border) {
         //Fichier actuel
         FormeManager.setCurrentFile(file);
 
@@ -358,30 +330,62 @@ public class SaveAndLoad {
 
         int n = FormeManager.arrayListOfCercle.size();
 
+        int mapX = FormeManager.getHeight();
+        int mapY = FormeManager.getWidth();
+        System.out.println("mapX : "+ mapX);
+        System.out.println("mapY : "+ mapY);
+
+        try {
+            fileWriter.write("{");
+            fileWriter.write("\n");
+            fileWriter.write("\t\"map\"{,\n");
+            fileWriter.write("\t\t\"x\" : "+ mapX +",\n");
+            fileWriter.write("\t\t\"y\" : "+ mapY +",\n");
+            fileWriter.write("\t},");
+            fileWriter.write("\n");
+
+            fileWriter.write("\t\"obstacles\": [\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int max = mapX;
+        if(mapY>mapX) {
+            max=mapY;
+        }
+        double facteur = max/800.;
+        System.out.println("Facteur : "+ facteur);
+
+
+        boolean premierligne = true;
         for(int i = 0;i<n;i++) {
 
-            int x = (int) FormeManager.arrayListOfCercle.get(i).getCenterX();
-            int y = (int) FormeManager.arrayListOfCercle.get(i).getCenterY();
-            int rayon = (int) FormeManager.arrayListOfCercle.get(i).getRadius();
+            int x = (int) (FormeManager.arrayListOfCercle.get(i).getCenterX()*facteur);
+            int y = (int) (FormeManager.arrayListOfCercle.get(i).getCenterY()*facteur);
+            int rayon = (int) (FormeManager.arrayListOfCercle.get(i).getRadius()*facteur);
             try {
-                fileWriter.write("{");
+                if(!premierligne) {
+                    fileWriter.write(",\n");
+                }
+                fileWriter.write("\t\t{");
                 fileWriter.write("\n");
-                fileWriter.write("\"type\" : \"circle\",\n");
-                fileWriter.write("\"x\" : "+ x +",\n");
-                fileWriter.write("\"y\" : "+ y +",\n");
-                fileWriter.write("\"angle\" : null,\n");
-                fileWriter.write("\"rayon\" : "+ rayon +",\n");
-                fileWriter.write("\"height\" : null,\n");
-                fileWriter.write("\"width\" : null,\n");
-                fileWriter.write("}");
-                fileWriter.write("\n");
+                fileWriter.write("\t\t\t\"type\" : \"circle\",\n");
+                fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
+                fileWriter.write("\t\t\t\"y\" : "+ y +",\n");
+                fileWriter.write("\t\t\t\"angle\" : null,\n");
+                fileWriter.write("\t\t\t\"rayon\" : "+ rayon +",\n");
+                fileWriter.write("\t\t\t\"height\" : null,\n");
+                fileWriter.write("\t\t\t\"width\" : null,\n");
+                fileWriter.write("\t\t}");
+
+
 
             } catch (IOException e) {
                 FormeManager.afficheError("Fichier de merde");
                 return;
             }
 
-
+            premierligne = false;
         }
 
 
@@ -391,34 +395,54 @@ public class SaveAndLoad {
 
 
 
-            int x = (int) FormeManager.arrayListOfRectangle.get(i).getX();
-            int y = (int) FormeManager.arrayListOfRectangle.get(i).getY();
+            int x = (int) (FormeManager.arrayListOfRectangle.get(i).getX()*facteur);
+            int y = (int) (FormeManager.arrayListOfRectangle.get(i).getY()*facteur);
             String angle = FormeManager.arrayListOfRectangle.get(i).getAccessibleText();
             int rot = Integer.parseInt(angle);
             double rotdouble = rot*2*Math.PI/360;
             angle = String.valueOf(rotdouble);
-            int height = (int) FormeManager.arrayListOfRectangle.get(i).getHeight();
-            int width = (int) FormeManager.arrayListOfRectangle.get(i).getWidth();
+            int height = (int) (FormeManager.arrayListOfRectangle.get(i).getHeight()*facteur);
+            int width = (int) (FormeManager.arrayListOfRectangle.get(i).getWidth()*facteur);
             try {
-                fileWriter.write("{");
+                if(!premierligne) {
+                    fileWriter.write(",\n");
+                }
+                fileWriter.write("\t\t{");
                 fileWriter.write("\n");
-                fileWriter.write("\"type\" : \"rectangle\",\n");
-                fileWriter.write("\"x\" : "+ x +",\n");
-                fileWriter.write("\"y\" : "+ y +",\n");
-                fileWriter.write("\"angle\" : "+ angle+",\n");
-                fileWriter.write("\"rayon\" : null,\n");
-                fileWriter.write("\"height\" : "+height+",\n");
-                fileWriter.write("\"width\" : "+width+",\n");
-                fileWriter.write("}");
-                fileWriter.write("\n");
+                fileWriter.write("\t\t\t\"type\" : \"rectangle\",\n");
+                fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
+                fileWriter.write("\t\t\t\"y\" : "+ y +",\n");
+                fileWriter.write("\t\t\t\"angle\" : "+ angle+",\n");
+                fileWriter.write("\t\t\t\"rayon\" : null,\n");
+                fileWriter.write("\t\t\t\"height\" : "+height+",\n");
+                fileWriter.write("\t\t\t\"width\" : "+width+",\n");
+                fileWriter.write("\t\t}");
+
 
             } catch (IOException e) {
                 FormeManager.afficheError("Fichier de merde");
                 return;
             }
 
-
+            premierligne = false;
         }
+
+        try {
+            if(!premierligne) {
+                fileWriter.write("\n");
+            }
+            fileWriter.write("\t]");
+            fileWriter.write("\n");
+            fileWriter.write("}");
+            fileWriter.write("\n");
+
+
+        } catch (IOException e) {
+            FormeManager.afficheError("Fichier de merde");
+            return;
+        }
+
+
         try {
             fileWriter.close();
         } catch (IOException e) {
@@ -426,7 +450,7 @@ public class SaveAndLoad {
             return;
         }
     }
-    public void saveAs(Stage primaryStage, MenuItem saveButton) {
+    public void saveAs(Stage primaryStage, MenuItem saveButton,Rectangle border) {
 
 
 
@@ -444,7 +468,7 @@ public class SaveAndLoad {
         //Si le fichier est valide
         if (file != null) {
             saveButton.setDisable(false);
-            saveP(file);
+            saveP(file,border);
 
 
         }
@@ -452,7 +476,7 @@ public class SaveAndLoad {
 
     }
 
-    public void save(Stage primaryStage) {
+    public void save(Stage primaryStage,Rectangle border) {
 
 
 
@@ -469,7 +493,7 @@ public class SaveAndLoad {
 
 
 
-            saveP(file);
+            saveP(file,border);
 
 
 

@@ -13,7 +13,7 @@ import java.net.URL;
  */
 public class ChangerImageFond {
 
-    public void change(Stage primaryStage, AnchorPane anchorPane) {
+    public void change(Stage primaryStage, AnchorPane planPane) {
         //On passe le LoadMode en true
         FormeManager.setLoadMod(true);
 
@@ -38,12 +38,14 @@ public class ChangerImageFond {
                 e.printStackTrace();
             }
 
+            FormeManager.setPath(path);
 
             Image chat = new Image(path);
 
 
             System.out.println(chat.getHeight());
-            BackgroundSize mySize = new BackgroundSize(800,800,false,false,false,false);
+            BackgroundSize mySize = new BackgroundSize(planPane.getWidth(),planPane.getHeight(),false,false,false,false);
+
 
             BackgroundImage myBI= new BackgroundImage(chat,
                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -53,7 +55,7 @@ public class ChangerImageFond {
 
 
 
-            anchorPane.setBackground(new Background(myBI));
+            planPane.setBackground(new Background(myBI));
 
 
         }  else {

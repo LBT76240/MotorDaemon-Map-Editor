@@ -1,6 +1,7 @@
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,14 +25,17 @@ public class Initialisation {
         planPane.setPrefHeight(800);
         planPane.setPrefWidth(800);
 
-        Rectangle Border = new Rectangle();
-        Border.setX(0);
-        Border.setY(0);
-        Border.setHeight(800);
-        Border.setWidth(800);
-        Border.setStroke(javafx.scene.paint.Color.BLACK);
-        Border.setFill(null);
-        planPane.getChildren().add(Border);
+
+
+
+        Rectangle border = new Rectangle();
+        border.setX(0);
+        border.setY(0);
+        border.setHeight(800);
+        border.setWidth(800);
+        border.setStroke(javafx.scene.paint.Color.BLACK);
+        border.setFill(null);
+        planPane.getChildren().add(border);
         anchorPane.getChildren().add(planPane);
 
         //Menu
@@ -96,7 +100,7 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.load(primaryStage,saveButton,planPane);
+                saveAndLoad.load(primaryStage,saveButton,planPane,border);
 
 
 
@@ -108,7 +112,7 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.saveAs(primaryStage,saveButton);
+                saveAndLoad.saveAs(primaryStage,saveButton,border);
 
 
 
@@ -121,7 +125,7 @@ public class Initialisation {
             if(!FormeManager.isBugMod()) {
 
                 SaveAndLoad saveAndLoad = new SaveAndLoad();
-                saveAndLoad.save(primaryStage);
+                saveAndLoad.save(primaryStage,border);
 
 
 
@@ -150,7 +154,7 @@ public class Initialisation {
         yessave.setOnAction(event -> {
 
             SaveAndLoad saveAndLoad = new SaveAndLoad();
-            saveAndLoad.save(primaryStage);
+            saveAndLoad.save(primaryStage,border);
 
             primaryStage.close();
         });
@@ -239,88 +243,147 @@ public class Initialisation {
 
         });
 
+        Button mapSizeButton = new Button ("Changer Taille Map");
+        mapSizeButton.setLayoutX(20);
+        mapSizeButton.setLayoutY(40);
+        anchorPane.getChildren().add(mapSizeButton);
+
+        Button mapCancelButton = new Button ("Annuler");
+        mapCancelButton.setLayoutX(20);
+        mapCancelButton.setLayoutY(90);
+        anchorPane.getChildren().add(mapCancelButton);
+
+        Text sizeXMaptext = new Text("Longeur (mm)");
+        sizeXMaptext.setLayoutX(20);
+        sizeXMaptext.setLayoutY(130);
+        anchorPane.getChildren().add(sizeXMaptext);
+
+        TextField sizeXMapfield = new TextField ("800");
+        sizeXMapfield.setLayoutX(20);
+        sizeXMapfield.setLayoutY(140);
+        anchorPane.getChildren().add(sizeXMapfield);
+
+        Text sizeYMaptext = new Text("Largeur (mm)");
+        sizeYMaptext.setLayoutX(20);
+        sizeYMaptext.setLayoutY(190);
+        anchorPane.getChildren().add(sizeYMaptext);
+
+        TextField sizeYMapfield = new TextField ("800");
+        sizeYMapfield.setLayoutX(20);
+        sizeYMapfield.setLayoutY(200);
+        anchorPane.getChildren().add(sizeYMapfield);
+
+
+
+        mapSizeButton.setOnAction(event->{
+
+            int longeur;
+            int largeur;
+            try {
+                longeur = Integer.parseInt(sizeXMapfield.getText());
+                largeur = Integer.parseInt(sizeYMapfield.getText());
+
+            } catch (NumberFormatException e) {
+                FormeManager.afficheError("Taille invalide" );
+                return;
+            }
+
+
+            FormeManager.setSize(longeur,largeur,planPane,border);
+
+
+        });
+
+        mapCancelButton.setOnAction(event->{
+
+
+            int height = (int)border.getHeight();
+            int width = (int)border.getWidth();
+            sizeXMapfield.setText(String.valueOf(height));
+            sizeYMapfield.setText(String.valueOf(width));
+        });
 
 
         Button cercleButton = new Button ("Ajout Cercle");
         cercleButton.setLayoutX(20);
-        cercleButton.setLayoutY(200);
+        cercleButton.setLayoutY(250);
         anchorPane.getChildren().add(cercleButton);
 
         Button rectangleButton = new Button ("Ajout Rectangle");
         rectangleButton.setLayoutX(20);
-        rectangleButton.setLayoutY(230);
+        rectangleButton.setLayoutY(280);
         anchorPane.getChildren().add(rectangleButton);
 
         Text posXtext = new Text("Position X (mm)");
         posXtext.setLayoutX(20);
-        posXtext.setLayoutY(280);
+        posXtext.setLayoutY(330);
         anchorPane.getChildren().add(posXtext);
 
         TextField posXfield = new TextField ("200");
         posXfield.setLayoutX(20);
-        posXfield.setLayoutY(290);
+        posXfield.setLayoutY(340);
         anchorPane.getChildren().add(posXfield);
 
         Text posYtext = new Text("Position Y (mm)");
         posYtext.setLayoutX(20);
-        posYtext.setLayoutY(340);
+        posYtext.setLayoutY(390);
         anchorPane.getChildren().add(posYtext);
 
         TextField posYfield = new TextField ("200");
         posYfield.setLayoutX(20);
-        posYfield.setLayoutY(350);
+        posYfield.setLayoutY(400);
         anchorPane.getChildren().add(posYfield);
 
         Text rottext = new Text("Rotation (°C)");
         rottext.setLayoutX(20);
-        rottext.setLayoutY(400);
+        rottext.setLayoutY(450);
         anchorPane.getChildren().add(rottext);
 
         TextField rotfield = new TextField ("0");
         rotfield.setLayoutX(20);
-        rotfield.setLayoutY(410);
+        rotfield.setLayoutY(460);
         anchorPane.getChildren().add(rotfield);
 
         Text rayontext = new Text("Rayon (mm)");
         rayontext.setLayoutX(20);
-        rayontext.setLayoutY(460);
+        rayontext.setLayoutY(510);
         anchorPane.getChildren().add(rayontext);
 
         TextField rayonfield = new TextField ("10");
         rayonfield.setLayoutX(20);
-        rayonfield.setLayoutY(470);
+        rayonfield.setLayoutY(520);
         anchorPane.getChildren().add(rayonfield);
 
         Text largeurtext = new Text("Largeur (mm)");
         largeurtext.setLayoutX(20);
-        largeurtext.setLayoutY(520);
+        largeurtext.setLayoutY(570);
         anchorPane.getChildren().add(largeurtext);
 
         TextField largeurfield = new TextField ("100");
         largeurfield.setLayoutX(20);
-        largeurfield.setLayoutY(530);
+        largeurfield.setLayoutY(580);
         anchorPane.getChildren().add(largeurfield);
 
         Text longeurtext = new Text("Longeur (mm)");
         longeurtext.setLayoutX(20);
-        longeurtext.setLayoutY(580);
+        longeurtext.setLayoutY(630);
         anchorPane.getChildren().add(longeurtext);
 
         TextField longeurfield = new TextField ("100");
         longeurfield.setLayoutX(20);
-        longeurfield.setLayoutY(590);
+        longeurfield.setLayoutY(640);
         anchorPane.getChildren().add(longeurfield);
 
 
         cercleButton.setOnAction(event -> {
             if(!FormeManager.isBugMod()) {
-                FormeManager.ajoutCercle(posXfield, posYfield, rayonfield, planPane);
+                FormeManager.ajoutCercle(posXfield, posYfield, rayonfield, planPane,border);
             }
 
         });
         rectangleButton.setOnAction(event -> {
             if(!FormeManager.isBugMod()) {
-                FormeManager.ajoutRectangle(posXfield, posYfield, rotfield,largeurfield,longeurfield, planPane);
+                FormeManager.ajoutRectangle(posXfield, posYfield, rotfield,largeurfield,longeurfield, planPane,border);
             }
 
         });
