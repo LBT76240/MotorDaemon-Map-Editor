@@ -340,7 +340,11 @@ public class SaveAndLoad {
             fileWriter.write("\n");
             fileWriter.write("\t\"map\"{\n");
             fileWriter.write("\t\t\"x\" : "+ mapX +",\n");
-            fileWriter.write("\t\t\"y\" : "+ mapY +"\n");
+            fileWriter.write("\t\t\"y\" : "+ mapY +",\n");
+            fileWriter.write("\t\t\"scale\" : "+ 1 +",\n");
+            fileWriter.write("\t\t\"xstart\" : "+ 42 +",\n");
+            fileWriter.write("\t\t\"ystart\" : "+ 42 +",\n");
+            fileWriter.write("\t\t\"anglestart\" : "+ 0 +"\n");
             fileWriter.write("\t},");
             fileWriter.write("\n");
 
