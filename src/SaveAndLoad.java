@@ -338,9 +338,9 @@ public class SaveAndLoad {
         try {
             fileWriter.write("{");
             fileWriter.write("\n");
-            fileWriter.write("\t\"map\"{,\n");
+            fileWriter.write("\t\"map\"{\n");
             fileWriter.write("\t\t\"x\" : "+ mapX +",\n");
-            fileWriter.write("\t\t\"y\" : "+ mapY +",\n");
+            fileWriter.write("\t\t\"y\" : "+ mapY +"\n");
             fileWriter.write("\t},");
             fileWriter.write("\n");
 
@@ -375,7 +375,7 @@ public class SaveAndLoad {
                 fileWriter.write("\t\t\t\"angle\" : null,\n");
                 fileWriter.write("\t\t\t\"rayon\" : "+ rayon +",\n");
                 fileWriter.write("\t\t\t\"height\" : null,\n");
-                fileWriter.write("\t\t\t\"width\" : null,\n");
+                fileWriter.write("\t\t\t\"width\" : null\n");
                 fileWriter.write("\t\t}");
 
 
