@@ -419,7 +419,7 @@ public class SaveAndLoad {
                 fileWriter.write("\t\t\t\"angle\" : "+ angle+",\n");
                 fileWriter.write("\t\t\t\"rayon\" : null,\n");
                 fileWriter.write("\t\t\t\"height\" : "+height+",\n");
-                fileWriter.write("\t\t\t\"width\" : "+width+",\n");
+                fileWriter.write("\t\t\t\"width\" : "+width+"\n");
                 fileWriter.write("\t\t}");
 
 
