@@ -129,7 +129,7 @@ public class SaveAndLoad {
                         } else if (newLabelRequire){
 
                             if(posX!=-1&& posY!=-1&&sizeX!=-1&&sizeY!=-1&&rotString!=null) {
-                                
+
 
                                 MyLabelClass newMyLabelClass = new MyLabelClass(posX,posY, rotString,border, planPane);
                                 newMyLabelClass.setLabeltextPos(sizeX,sizeY);
