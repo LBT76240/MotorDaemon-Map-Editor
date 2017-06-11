@@ -20,6 +20,13 @@ import java.util.ArrayList;
  * Created by trail on 2017-04-30.
  */
 public class FormeManager {
+
+    private static Image imagecross = new Image("file:sprite/cross.png");
+
+    public static Image getImagecross() {
+        return imagecross;
+    }
+
     private static String path = null;
 
     public static String getPath() {
@@ -51,6 +58,11 @@ public class FormeManager {
 
     public static ArrayList<Circle> arrayListOfCercle = new ArrayList();
     public static ArrayList<Rectangle> arrayListOfRectangle = new ArrayList();
+    public static ArrayList<MyLabelClass> arrayListOfMyLabel = new ArrayList();
+
+    public static ArrayList<MyLabelClass> getArrayListOfMyLabel() {
+        return arrayListOfMyLabel;
+    }
 
     private static boolean bugMod = false;
 
@@ -373,6 +385,42 @@ public class FormeManager {
 
     }
 
+
+    public static MyLabelClass newMyLabelClass(int posX, int posY, String labelString, Rectangle border, AnchorPane planPane) {
+        MyLabelClass newLabelClass = new MyLabelClass(posX,posY,labelString,border,planPane);
+        return newLabelClass;
+    }
+
+    public static void ajoutLabel(TextField posXfield, TextField posYfield, TextField labelfield, AnchorPane planPane, Rectangle border) {
+
+        String posXString = posXfield.getText();
+        int posX=0;
+
+        try {
+            posX = Integer.parseInt(posXString);
+        } catch (NumberFormatException e) {
+            afficheError("Position X invalide" );
+            return;
+        }
+
+        String posYString = posYfield.getText();
+        int posY=0;
+
+        try {
+            posY = Integer.parseInt(posYString);
+        } catch (NumberFormatException e) {
+            afficheError("Position Y invalide" );
+            return;
+        }
+
+        String labelString = labelfield.getText();
+
+        MyLabelClass newLabelClass = newMyLabelClass(posX,posY,labelString,border,planPane);
+        planPane.getChildren().add(newLabelClass.getLabeltext());
+        planPane.getChildren().add(newLabelClass.getLine());
+        planPane.getChildren().add(newLabelClass.getImageView());
+        arrayListOfMyLabel.add(newLabelClass);
+    }
 
     public static void init () {
         initErrorStage();

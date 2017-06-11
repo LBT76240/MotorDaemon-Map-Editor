@@ -57,6 +57,7 @@ public class SaveAndLoad {
             BufferedReader bufferedReader = null;
             ArrayList<Circle> newArrayCircle = new ArrayList<Circle>();
             ArrayList<Rectangle> newArrayRectangle = new ArrayList<Rectangle>();
+            ArrayList<MyLabelClass> newArrayLabel = new ArrayList<MyLabelClass>();
 
             try {
                 bufferedReader = new BufferedReader(fileReader);
@@ -69,6 +70,7 @@ public class SaveAndLoad {
                 int sizeY = -1;
                 Boolean newCircleRequire = false;
                 Boolean newRectangleRequire = false;
+                Boolean newLabelRequire = false;
                 int posX = -1;
                 int posY = -1;
                 int rayon = -1;
@@ -124,12 +126,26 @@ public class SaveAndLoad {
 
                             }
 
+                        } else if (newLabelRequire){
+
+                            if(posX!=-1&& posY!=-1&&sizeX!=-1&&sizeY!=-1&&rotString!=null) {
+                                
+
+                                MyLabelClass newMyLabelClass = new MyLabelClass(posX,posY, rotString,border, planPane);
+                                newMyLabelClass.setLabeltextPos(sizeX,sizeY);
+                                newArrayLabel.add(newMyLabelClass);
+                            }else {
+                                FormeManager.afficheError("Ton Json est de la merde, va niquer ta maire, celle qui t'as porté pendant 12 mois !");
+
+                            }
+
                         }
                         mapSizeRequire = false;
                         sizeX = -1;
                         sizeY = -1;
                         newCircleRequire = false;
                         newRectangleRequire = false;
+                        newLabelRequire = false;
                         posX = -1;
                         posY = -1;
                         rayon = -1;
@@ -137,7 +153,7 @@ public class SaveAndLoad {
                         rotString = null;
                         height = -1;
                         width = -1;
-                    } else if(newCircleRequire == false && newRectangleRequire == false && mapSizeRequire == false) {
+                    } else if(newCircleRequire == false && newRectangleRequire == false && mapSizeRequire == false && newLabelRequire == false) {
                         if (sCurrentLine.contains("circle")) {
                             newCircleRequire = true;
                         }
@@ -147,15 +163,21 @@ public class SaveAndLoad {
                         if (sCurrentLine.contains("map")) {
                             mapSizeRequire = true;
                         }
+                        if (sCurrentLine.contains("text")) {
+                            newLabelRequire = true;
+
+                            rotString = sCurrentLine.substring(13,sCurrentLine.length()-2);
+                            System.out.println(rotString);
+                        }
                     } else if (newCircleRequire){
-                        if (sCurrentLine.contains("\"x\"")) {
+                        if (sCurrentLine.contains("\"xcenter\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
                             lapin = lapin[n-1].split(",");
                             String xS = lapin[0];
                             int x = Integer.parseInt(xS);
                             posX=(int) (x*facteur);
-                        } else if (sCurrentLine.contains("\"y\"")) {
+                        } else if (sCurrentLine.contains("\"ycenter\"")) {
                             String[] lapin = sCurrentLine.split(" ");
                             int n = lapin.length;
                             lapin = lapin[n-1].split(",");
@@ -241,6 +263,49 @@ public class SaveAndLoad {
                             int y = Integer.parseInt(yS);
                             sizeY = y;
                         }
+                    } else if (newLabelRequire){
+                        if (sCurrentLine.contains("\"xtext\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String xS = lapin[0];
+                            int x = Integer.parseInt(xS);
+                            sizeX = (int) (x*facteur);
+                            System.out.println("xtext");
+                            System.out.println(x);
+                            System.out.println(sizeX);
+                        } else if (sCurrentLine.contains("\"ytext\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String yS = lapin[0];
+                            int y = Integer.parseInt(yS);
+                            sizeY = (int) (y*facteur);
+                            System.out.println("ytext");
+                            System.out.println(y);
+                            System.out.println(sizeY);
+                        } else if (sCurrentLine.contains("\"x\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String xS = lapin[0];
+                            int x = Integer.parseInt(xS);
+                            posX = (int) (x*facteur);
+                            System.out.println("x");
+                            System.out.println(x);
+                            System.out.println(posX);
+                        } else if (sCurrentLine.contains("\"y\"")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String yS = lapin[0];
+                            int y = Integer.parseInt(yS);
+                            posY = (int) (y*facteur);
+                            System.out.println("y");
+                            System.out.println(y);
+                            System.out.println(posY);
+                        }
+
                     } else {
                         FormeManager.afficheError("J'ai de la merde, my bad");
                         return;
@@ -291,6 +356,20 @@ public class SaveAndLoad {
             FormeManager.arrayListOfRectangle.forEach(rectangle -> {
                 planPane.getChildren().add(rectangle);
             });
+
+            FormeManager.arrayListOfMyLabel.forEach(myLabelClass -> {
+                planPane.getChildren().remove(myLabelClass.getImageView());
+                planPane.getChildren().remove(myLabelClass.getLine());
+                planPane.getChildren().remove(myLabelClass.getLabeltext());
+            });
+
+            FormeManager.arrayListOfMyLabel = newArrayLabel;
+            FormeManager.arrayListOfMyLabel.forEach(myLabelClass -> {
+                planPane.getChildren().add(myLabelClass.getImageView());
+                planPane.getChildren().add(myLabelClass.getLine());
+                planPane.getChildren().add(myLabelClass.getLabeltext());
+            });
+
             //A LA FIN
 
         } else {
@@ -338,7 +417,7 @@ public class SaveAndLoad {
         try {
             fileWriter.write("{");
             fileWriter.write("\n");
-            fileWriter.write("\t\"map\"{\n");
+            fileWriter.write("\t\"map\":{\n");
             fileWriter.write("\t\t\"x\" : "+ mapX +",\n");
             fileWriter.write("\t\t\"y\" : "+ mapY +",\n");
             fileWriter.write("\t\t\"scale\" : "+ 1 +",\n");
@@ -374,8 +453,10 @@ public class SaveAndLoad {
                 fileWriter.write("\t\t{");
                 fileWriter.write("\n");
                 fileWriter.write("\t\t\t\"type\" : \"circle\",\n");
-                fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
-                fileWriter.write("\t\t\t\"y\" : "+ y +",\n");
+                fileWriter.write("\t\t\t\"xcenter\" : "+ x +",\n");
+                fileWriter.write("\t\t\t\"ycenter\" : "+ y +",\n");
+                fileWriter.write("\t\t\t\"x\" : null,\n");
+                fileWriter.write("\t\t\t\"y\" : null,\n");
                 fileWriter.write("\t\t\t\"angle\" : null,\n");
                 fileWriter.write("\t\t\t\"rayon\" : "+ rayon +",\n");
                 fileWriter.write("\t\t\t\"height\" : null,\n");
@@ -407,6 +488,36 @@ public class SaveAndLoad {
             angle = String.valueOf(rotdouble);
             int height = (int) (FormeManager.arrayListOfRectangle.get(i).getHeight()*facteur);
             int width = (int) (FormeManager.arrayListOfRectangle.get(i).getWidth()*facteur);
+
+
+
+            double x1 = x;
+            double y1 = y;
+            double x2 = ((x)+((height) * Math.cos(rotdouble)));
+            double y2 = ((y)+((height) * Math.sin(rotdouble)));
+            double x3 = ((x)-((width) * Math.sin(rotdouble)));
+            double y3 = ((y)+((width) * Math.cos(rotdouble)));
+
+            double xcenterdouble = (x2+x3)/2;
+            double ycenterdouble = (y2+y3)/2;
+
+            int xcenter = (int)xcenterdouble;
+            int ycenter = (int)ycenterdouble;
+
+
+
+            System.out.println("Nouveau rectangle");
+
+            System.out.println(x1);
+            System.out.println(y1);
+            System.out.println(x2);
+            System.out.println(y2);
+            System.out.println(x3);
+            System.out.println(y3);
+            System.out.println(xcenterdouble);
+            System.out.println(ycenterdouble);
+
+
             try {
                 if(!premierligne) {
                     fileWriter.write(",\n");
@@ -414,6 +525,8 @@ public class SaveAndLoad {
                 fileWriter.write("\t\t{");
                 fileWriter.write("\n");
                 fileWriter.write("\t\t\t\"type\" : \"rectangle\",\n");
+                fileWriter.write("\t\t\t\"xcenter\" : "+ xcenter +",\n");
+                fileWriter.write("\t\t\t\"ycenter\" : "+ ycenter +",\n");
                 fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
                 fileWriter.write("\t\t\t\"y\" : "+ y +",\n");
                 fileWriter.write("\t\t\t\"angle\" : "+ angle+",\n");
@@ -437,8 +550,7 @@ public class SaveAndLoad {
             }
             fileWriter.write("\t]");
             fileWriter.write("\n");
-            fileWriter.write("}");
-            fileWriter.write("\n");
+
 
 
         } catch (IOException e) {
@@ -446,7 +558,71 @@ public class SaveAndLoad {
             return;
         }
 
+        try {
+            fileWriter.write("\t\"label\": [\n");
+        } catch (IOException e) {
+            FormeManager.afficheError("Fichier de merde");
+            return;
+        }
 
+        n = FormeManager.arrayListOfMyLabel.size();
+
+        premierligne = true;
+        for(int i = 0;i<n;i++) {
+
+
+
+            int x = (int) (FormeManager.arrayListOfMyLabel.get(i).getImageView().getX()*facteur);
+            int y = (int) (FormeManager.arrayListOfMyLabel.get(i).getImageView().getY()*facteur);
+
+            int xlabel = (int) (FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getX()*facteur);
+            int ylabel = (int) (FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getY()*facteur);
+
+
+            System.out.println("Nouveau Label");
+
+            System.out.println(x);
+            System.out.println(y);
+            System.out.println(xlabel);
+            System.out.println(ylabel);
+            System.out.println(FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getText());
+
+
+            try {
+                if(!premierligne) {
+                    fileWriter.write(",\n");
+                }
+                fileWriter.write("\t\t{");
+                fileWriter.write("\n");
+                fileWriter.write("\t\t\t\"text\" : "+"\"" +FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getText() +"\"" +",\n");
+                fileWriter.write("\t\t\t\"xtext\" : "+ xlabel +",\n");
+                fileWriter.write("\t\t\t\"ytext\" : "+ ylabel +",\n");
+                fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
+                fileWriter.write("\t\t\t\"y\" : "+ y +"\n");
+                fileWriter.write("\t\t}");
+
+
+            } catch (IOException e) {
+                FormeManager.afficheError("Fichier de merde");
+                return;
+            }
+
+            premierligne = false;
+
+        }
+
+
+        try {
+            if(!premierligne) {
+                fileWriter.write("\n");
+            }
+            fileWriter.write("\t]\n");
+            fileWriter.write("}");
+            fileWriter.write("\n");
+        } catch (IOException e) {
+            FormeManager.afficheError("Fichier de merde");
+            return;
+        }
         try {
             fileWriter.close();
         } catch (IOException e) {

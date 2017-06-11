@@ -314,66 +314,80 @@ public class Initialisation {
         rectangleButton.setLayoutY(280);
         anchorPane.getChildren().add(rectangleButton);
 
+        Button labelButton = new Button ("Ajout Label");
+        labelButton.setLayoutX(20);
+        labelButton.setLayoutY(310);
+        anchorPane.getChildren().add(labelButton);
+
         Text posXtext = new Text("Position X (mm)");
         posXtext.setLayoutX(20);
-        posXtext.setLayoutY(330);
+        posXtext.setLayoutY(360);
         anchorPane.getChildren().add(posXtext);
 
         TextField posXfield = new TextField ("200");
         posXfield.setLayoutX(20);
-        posXfield.setLayoutY(340);
+        posXfield.setLayoutY(370);
         anchorPane.getChildren().add(posXfield);
 
         Text posYtext = new Text("Position Y (mm)");
         posYtext.setLayoutX(20);
-        posYtext.setLayoutY(390);
+        posYtext.setLayoutY(420);
         anchorPane.getChildren().add(posYtext);
 
         TextField posYfield = new TextField ("200");
         posYfield.setLayoutX(20);
-        posYfield.setLayoutY(400);
+        posYfield.setLayoutY(430);
         anchorPane.getChildren().add(posYfield);
 
         Text rottext = new Text("Rotation (°C)");
         rottext.setLayoutX(20);
-        rottext.setLayoutY(450);
+        rottext.setLayoutY(480);
         anchorPane.getChildren().add(rottext);
 
         TextField rotfield = new TextField ("0");
         rotfield.setLayoutX(20);
-        rotfield.setLayoutY(460);
+        rotfield.setLayoutY(490);
         anchorPane.getChildren().add(rotfield);
 
         Text rayontext = new Text("Rayon (mm)");
         rayontext.setLayoutX(20);
-        rayontext.setLayoutY(510);
+        rayontext.setLayoutY(540);
         anchorPane.getChildren().add(rayontext);
 
         TextField rayonfield = new TextField ("10");
         rayonfield.setLayoutX(20);
-        rayonfield.setLayoutY(520);
+        rayonfield.setLayoutY(550);
         anchorPane.getChildren().add(rayonfield);
 
         Text largeurtext = new Text("Largeur (mm)");
         largeurtext.setLayoutX(20);
-        largeurtext.setLayoutY(570);
+        largeurtext.setLayoutY(600);
         anchorPane.getChildren().add(largeurtext);
 
         TextField largeurfield = new TextField ("100");
         largeurfield.setLayoutX(20);
-        largeurfield.setLayoutY(580);
+        largeurfield.setLayoutY(610);
         anchorPane.getChildren().add(largeurfield);
 
         Text longeurtext = new Text("Longeur (mm)");
         longeurtext.setLayoutX(20);
-        longeurtext.setLayoutY(630);
+        longeurtext.setLayoutY(660);
         anchorPane.getChildren().add(longeurtext);
 
         TextField longeurfield = new TextField ("100");
         longeurfield.setLayoutX(20);
-        longeurfield.setLayoutY(640);
+        longeurfield.setLayoutY(670);
         anchorPane.getChildren().add(longeurfield);
 
+        Text labeltext = new Text("Label");
+        labeltext.setLayoutX(20);
+        labeltext.setLayoutY(720);
+        anchorPane.getChildren().add(labeltext);
+
+        TextField labelfield = new TextField ("Amphi 10");
+        labelfield.setLayoutX(20);
+        labelfield.setLayoutY(730);
+        anchorPane.getChildren().add(labelfield);
 
         cercleButton.setOnAction(event -> {
             if(!FormeManager.isBugMod()) {
@@ -387,6 +401,13 @@ public class Initialisation {
             }
 
         });
+        labelButton.setOnAction(event -> {
+            if(!FormeManager.isBugMod()) {
+                FormeManager.ajoutLabel(posXfield,posYfield,labelfield,planPane,border);
+            }
+
+        });
+
 
 
         Scene primaryscene = new Scene(anchorPane, 1000, 820);
