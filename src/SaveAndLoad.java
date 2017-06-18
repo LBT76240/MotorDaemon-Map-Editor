@@ -223,7 +223,7 @@ public class SaveAndLoad {
                             rayonD = (rayonD * 360) / (2 * Math.PI);
 
                             int rot2 = (int) rayonD;
-                            rot = (int) (rot2*facteur);
+                            rot = (int) (rot2);
                             rotString = String.valueOf(rot);
 
 
