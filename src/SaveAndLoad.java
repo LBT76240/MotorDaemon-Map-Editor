@@ -79,6 +79,7 @@ public class SaveAndLoad {
                 int height = -1;
                 int width = -1;
                 double facteur = 1.;
+                boolean hiden = false;
                 while ((sCurrentLine = bufferedReader.readLine()) != null) {
                     if(sCurrentLine.contains("{") && !sCurrentLine.contains("map") ) {
                         mapSizeRequire = false;
@@ -133,6 +134,7 @@ public class SaveAndLoad {
 
                                 MyLabelClass newMyLabelClass = new MyLabelClass(posX,posY, rotString,border, planPane);
                                 newMyLabelClass.setLabeltextPos(sizeX,sizeY);
+                                newMyLabelClass.setHiden(hiden);
                                 newArrayLabel.add(newMyLabelClass);
                             }else {
                                 FormeManager.afficheError("Ton Json est de la merde, va niquer ta maire, celle qui t'as porté pendant 12 mois !");
@@ -153,6 +155,7 @@ public class SaveAndLoad {
                         rotString = null;
                         height = -1;
                         width = -1;
+                        hiden = false;
                     } else if(newCircleRequire == false && newRectangleRequire == false && mapSizeRequire == false && newLabelRequire == false) {
                         if (sCurrentLine.contains("circle")) {
                             newCircleRequire = true;
@@ -304,6 +307,14 @@ public class SaveAndLoad {
                             System.out.println("y");
                             System.out.println(y);
                             System.out.println(posY);
+                        } else if (sCurrentLine.contains("hiden")) {
+                            String[] lapin = sCurrentLine.split(" ");
+                            int n = lapin.length;
+                            lapin = lapin[n - 1].split(",");
+                            String yS = lapin[0];
+                            hiden = yS.equals("true");
+                            System.out.println("hiden");
+                            System.out.println(hiden);
                         }
 
                     } else {
@@ -548,7 +559,7 @@ public class SaveAndLoad {
             if(!premierligne) {
                 fileWriter.write("\n");
             }
-            fileWriter.write("\t]");
+            fileWriter.write("\t],");
             fileWriter.write("\n");
 
 
@@ -578,6 +589,8 @@ public class SaveAndLoad {
             int xlabel = (int) (FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getX()*facteur);
             int ylabel = (int) (FormeManager.arrayListOfMyLabel.get(i).getLabeltext().getY()*facteur);
 
+            boolean isHiden = FormeManager.arrayListOfMyLabel.get(i).getHiden();
+
 
             System.out.println("Nouveau Label");
 
@@ -598,7 +611,8 @@ public class SaveAndLoad {
                 fileWriter.write("\t\t\t\"xtext\" : "+ xlabel +",\n");
                 fileWriter.write("\t\t\t\"ytext\" : "+ ylabel +",\n");
                 fileWriter.write("\t\t\t\"x\" : "+ x +",\n");
-                fileWriter.write("\t\t\t\"y\" : "+ y +"\n");
+                fileWriter.write("\t\t\t\"y\" : "+ y +",\n");
+                fileWriter.write("\t\t\t\"hiden\" : "+ isHiden +"\n");
                 fileWriter.write("\t\t}");
 
 

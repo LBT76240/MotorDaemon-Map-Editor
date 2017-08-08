@@ -22,11 +22,14 @@ import java.util.ArrayList;
 public class FormeManager {
 
     private static Image imagecross = new Image("file:sprite/cross.png");
+    private static Image imagecrossRed = new Image("file:sprite/crossREd.png");
 
     public static Image getImagecross() {
         return imagecross;
     }
-
+    public static Image getImagecrossRed() {
+        return imagecrossRed;
+    }
     private static String path = null;
 
     public static String getPath() {

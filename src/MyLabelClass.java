@@ -3,6 +3,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -14,6 +15,10 @@ public class MyLabelClass {
     private Text labeltext = null;
     private ImageView imageView = null;
     private Line line = null;
+    private Boolean isHiden = false;
+    private ContextMenu contextMenu;
+    private MenuItem itemHide;
+    private MenuItem itemShow;
 
     public void setLabeltextPos(int posX, int posY) {
         labeltext.setX(posX);
@@ -105,7 +110,7 @@ public class MyLabelClass {
             }
         });
 
-        ContextMenu contextMenu = new ContextMenu();
+        contextMenu = new ContextMenu();
 
 
         MenuItem itemDelete = new MenuItem("Delete");
@@ -118,6 +123,18 @@ public class MyLabelClass {
         });
 
         contextMenu.getItems().add(itemDelete);
+
+        itemHide = new MenuItem("Hide");
+        itemShow = new MenuItem("Show");
+        itemHide.setOnAction(event -> {
+            hide();
+        });
+        itemShow.setOnAction(event -> {
+            show();
+        });
+        contextMenu.getItems().add(itemHide);
+
+
         labeltext.setOnContextMenuRequested(event -> {
             if(!FormeManager.isBugMod()) {
                 contextMenu.show(labeltext, Side.TOP, 0, 0);
@@ -125,6 +142,33 @@ public class MyLabelClass {
             }
 
         });
+    }
+
+    public void setHiden(boolean hiden) {
+        isHiden = hiden;
+        if(isHiden) {
+            hide();
+        } else {
+            show();
+        }
+    }
+
+    public void hide() {
+        isHiden = true;
+        contextMenu.getItems().remove(itemHide);
+        contextMenu.getItems().add(itemShow);
+        labeltext.setFill(Color.RED);
+        line.setStyle("-fx-stroke: red;");
+        imageView.setImage(FormeManager.getImagecrossRed());
+    }
+
+    public void show() {
+        isHiden = false;
+        contextMenu.getItems().remove(itemShow);
+        contextMenu.getItems().add(itemHide);
+        labeltext.setFill(Color.BLACK);
+        line.setStyle("-fx-stroke: black;");
+        imageView.setImage(FormeManager.getImagecross());
     }
 
     public Text getLabeltext() {
@@ -137,5 +181,9 @@ public class MyLabelClass {
 
     public Line getLine() {
         return line;
+    }
+
+    public Boolean getHiden() {
+        return isHiden;
     }
 }

@@ -209,9 +209,9 @@
 		{
 			"type" : "rectangle",
 			"xcenter" : 530,
-			"ycenter" : 588,
+			"ycenter" : 585,
 			"x" : 615,
-			"y" : 558,
+			"y" : 555,
 			"angle" : 1.2217304763960306,
 			"rayon" : null,
 			"height" : 0,
@@ -285,10 +285,10 @@
 		},
 		{
 			"type" : "rectangle",
-			"xcenter" : 258,
-			"ycenter" : 802,
-			"x" : 348,
-			"y" : 813,
+			"xcenter" : 255,
+			"ycenter" : 799,
+			"x" : 345,
+			"y" : 810,
 			"angle" : 1.6929693744344996,
 			"rayon" : null,
 			"height" : 0,
@@ -329,9 +329,9 @@
 		},
 		{
 			"type" : "rectangle",
-			"xcenter" : 851,
+			"xcenter" : 844,
 			"ycenter" : 1499,
-			"x" : 862,
+			"x" : 855,
 			"y" : 1410,
 			"angle" : 0.12217304763960307,
 			"rayon" : null,
@@ -340,10 +340,10 @@
 		},
 		{
 			"type" : "rectangle",
-			"xcenter" : 1027,
-			"ycenter" : 1521,
-			"x" : 1038,
-			"y" : 1432,
+			"xcenter" : 1024,
+			"ycenter" : 1514,
+			"x" : 1035,
+			"y" : 1425,
 			"angle" : 0.12217304763960307,
 			"rayon" : null,
 			"height" : 0,
@@ -351,9 +351,9 @@
 		},
 		{
 			"type" : "rectangle",
-			"xcenter" : 1207,
+			"xcenter" : 1204,
 			"ycenter" : 1544,
-			"x" : 1218,
+			"x" : 1215,
 			"y" : 1455,
 			"angle" : 0.12217304763960307,
 			"rayon" : null,
@@ -362,9 +362,9 @@
 		},
 		{
 			"type" : "rectangle",
-			"xcenter" : 1372,
+			"xcenter" : 1369,
 			"ycenter" : 1559,
-			"x" : 1383,
+			"x" : 1380,
 			"y" : 1470,
 			"angle" : 0.12217304763960307,
 			"rayon" : null,
@@ -734,105 +734,119 @@
 			"height" : 375,
 			"width" : 375
 		}
-	]
+	],
 	"label": [
 		{
 			"text" : "Batiment Dir",
 			"xtext" : 1515,
 			"ytext" : 120,
 			"x" : 1890,
-			"y" : 180
+			"y" : 180,
+			"hiden" : false
 		},
 		{
 			"text" : "Amphi 10",
 			"xtext" : 2160,
 			"ytext" : 1380,
 			"x" : 2100,
-			"y" : 1245
+			"y" : 1245,
+			"hiden" : false
 		},
 		{
 			"text" : "Amphi 11",
 			"xtext" : 1830,
 			"ytext" : 1245,
 			"x" : 1965,
-			"y" : 1125
+			"y" : 1125,
+			"hiden" : false
 		},
 		{
 			"text" : "Entrée Forum",
 			"xtext" : 1005,
 			"ytext" : 840,
 			"x" : 1050,
-			"y" : 930
+			"y" : 930,
+			"hiden" : false
 		},
 		{
 			"text" : "Entrée Forum Bis",
 			"xtext" : 600,
 			"ytext" : 315,
 			"x" : 540,
-			"y" : 480
+			"y" : 480,
+			"hiden" : false
 		},
 		{
 			"text" : "Ancien Rits",
 			"xtext" : 495,
 			"ytext" : 180,
 			"x" : 180,
-			"y" : 375
+			"y" : 375,
+			"hiden" : false
 		},
 		{
 			"text" : "Vers L'U3-Gymnase",
 			"xtext" : 45,
 			"ytext" : 1095,
 			"x" : 285,
-			"y" : 1050
+			"y" : 1050,
+			"hiden" : false
 		},
 		{
 			"text" : "Batiment A-C-E",
 			"xtext" : 495,
 			"ytext" : 1590,
 			"x" : 645,
-			"y" : 1380
+			"y" : 1380,
+			"hiden" : false
 		},
 		{
 			"text" : "Batiment B-D",
 			"xtext" : 2025,
 			"ytext" : 1680,
 			"x" : 1935,
-			"y" : 1425
+			"y" : 1425,
+			"hiden" : false
 		},
 		{
 			"text" : "SSP",
 			"xtext" : 1785,
 			"ytext" : 1530,
 			"x" : 1935,
-			"y" : 1440
+			"y" : 1440,
+			"hiden" : false
 		},
 		{
 			"text" : "Machines à café",
 			"xtext" : 2130,
 			"ytext" : 1515,
 			"x" : 2085,
-			"y" : 1455
+			"y" : 1455,
+			"hiden" : false
 		},
 		{
 			"text" : "Toilettes",
 			"xtext" : 2580,
 			"ytext" : 1335,
 			"x" : 2460,
-			"y" : 1350
+			"y" : 1350,
+			"hiden" : false
 		},
 		{
 			"text" : "Batiment G",
 			"xtext" : 2595,
 			"ytext" : 495,
 			"x" : 2700,
-			"y" : 1110
+			"y" : 1110,
+			"hiden" : false
 		},
 		{
 			"text" : "Médiathèque",
 			"xtext" : 2565,
 			"ytext" : 1710,
 			"x" : 2445,
-			"y" : 1575
+			"y" : 1575,
+			"hiden" : true
 		}
 	]
 }
